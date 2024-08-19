@@ -3,12 +3,10 @@ import { useState, useEffect } from 'react'
 import Products from './Products'
 import ProductForm from './ProductForm'
 
-const cors = require('cors');
-
-App.use(cors());
-
 function App() {
     const [products, setProducts] = useState([])
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [currentProduct, setCurrentProduct] = useState({})
 
     useEffect(() => {
         fetchProducts()
@@ -21,11 +19,49 @@ function App() {
         console.log(data)
     }
 
+    const closeModal = () => {
+        setIsModalOpen(false)
+        setCurrentProduct({})
+    }
+
+    const openCreateModal = () => {
+        if (!isModalOpen) {
+            setIsModalOpen(true)
+        }
+    }
+
+    const openEditModal = (product) => {
+        if (isModalOpen) return
+        setCurrentProduct(product)
+        setIsModalOpen(true)
+    }
+
+    const onUpdated = () => {
+        closeModal()
+        fetchProducts()
+    }
+
     return (
         <div className="app-container">
             <h1 className="title">Products CRUD DEMO</h1>
-            <ProductForm fetchProducts={fetchProducts} />
-            <Products products={products} />
+            <button onClick={openCreateModal}>Create New Product</button>
+            
+            {/* Creating new product form */}
+            {
+                isModalOpen && (
+                    <div className='modal'>
+                        <div className='modal-content'>
+                            <span className='close' onClick={closeModal}>&times;</span>
+                            <ProductForm existingPontact={currentProduct} updateCallback={onUpdated} fetchProducts={fetchProducts} />
+                        </div>
+                    </div>
+                )
+            }
+            
+            {/* Products list */}
+            <Products products={products} updateProduct={openEditModal} updateCallback={onUpdated} />
+
+            
         </div>
     )
 }

@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 import mysql.connector
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 db = mysql.connector.connect(
     host="localhost",
@@ -14,15 +16,16 @@ cursor = db.cursor()
 
 @app.route('/products', methods=['GET'])
 def list_products():
-    cursor.execute("SELECT names FROM products")
+    cursor.execute("SELECT id, names FROM products")
     products = cursor.fetchall()
-    
+
     list_products = []
     for product in products:
         list_products.append({
-            "names": product[0],
+            "id": product[0],
+            "names": product[1],
         })
-    
+
     return jsonify(list_products), 200
 
 @app.route('/create_products', methods=['POST'])
@@ -37,20 +40,21 @@ def add_products():
     except mysql.connector.Error as err:
         return jsonify({"message": f"Error: {err}"}), 500
 
-@app.route('/update_products/<int:id>', methods=['PUT'])
+@app.route('/update_products/<int:id>', methods=['PATCH'])
 def edit_products(id):
     data = request.get_json()
     try:
-        cursor.execute("UPDATE products SET names=%s WHERE id=%s", (data["names"], id))
+        cursor.execute("UPDATE products SET names=%s WHERE id=%s", (data["names"], id,))
         db.commit()
         return jsonify({"message": "Products updated"}), 201
     except mysql.connector.Error as err:
         return jsonify({"message": f"Error: {err}"}), 500
 
-@app.route('/delete_products/<int:id>', methods=['DELETE'])
+@app.route('/delete_products/<int:user_id>', methods=['DELETE'])
 def delete_products(id):
+    print(f"Deleting product with ID: {id}")
     try:
-        cursor.execute("DELETE FROM products WHERE id=%s", (id,))
+        cursor.execute("DELETE FROM products WHERE id=%s", (id))
         db.commit()
         return jsonify({"message": "Product deleted"}), 201
     except mysql.connector.Error as err:

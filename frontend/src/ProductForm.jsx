@@ -1,15 +1,18 @@
 import { useState } from "react"
 
-const ProductForm = ({ fetchProducts }) => {
-    const [names, setNames] = useState("")
+const ProductForm = ({ existingProduct = {}, updateCallback}) => {
+    const [names, setNames] = useState(existingProduct.names || "")
+
+    const updating = Object.entries(existingProduct).length !== 0
 
     const onSubmit = async (e) => {
         e.preventDefault()
+        console.log(existingProduct)
 
         const data = { names }
-        const url = "http://127.0.0.1:5000/create_products"
+        const url = "http://127.0.0.1:5000/" + (updating ? `update_products/${existingProduct.id}` : "create_products")
         const options = {
-            method: "POST",
+            method: updating ? "PATCH": "POST",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -18,10 +21,11 @@ const ProductForm = ({ fetchProducts }) => {
         const response = await fetch(url, options)
         if (response.status === 201 || response.status === 200) {
             setNames("")
-            fetchProducts() // Recargar la lista de productos
-        } else {
+            updateCallback() // Recargar la lista de productos
             const data = await response.json()
             alert(data.message)
+        } else {
+            alert("An error occurred")
         }
     }
 
@@ -32,7 +36,7 @@ const ProductForm = ({ fetchProducts }) => {
                 <label htmlFor="names">Insert the product name:</label>
                 <input type="text" id="names" value={names} onChange={(e) => setNames(e.target.value)} />
             </div>
-            <button type="submit" className="button">Create Product</button>
+            <button type="submit" className="button">{updating ? "Update": "Create"}</button>
         </form>
     </div>
     )
