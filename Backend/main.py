@@ -50,7 +50,7 @@ def edit_products(id):
     except mysql.connector.Error as err:
         return jsonify({"message": f"Error: {err}"}), 500
 
-@app.route('/delete_products/<int:user_id>', methods=['DELETE'])
+@app.route('/delete_products/<int:id>', methods=['DELETE'])
 def delete_products(id):
     print(f"Deleting product with ID: {id}")
     try:

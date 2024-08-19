@@ -21,7 +21,7 @@ const ProductForm = ({ existingProduct = {}, updateCallback}) => {
         const response = await fetch(url, options)
         if (response.status === 201 || response.status === 200) {
             setNames("")
-            updateCallback() // Recargar la lista de productos
+            updateCallback() // Reload products
             const data = await response.json()
             alert(data.message)
         } else {
