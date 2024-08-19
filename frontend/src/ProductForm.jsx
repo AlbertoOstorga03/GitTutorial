@@ -26,13 +26,15 @@ const ProductForm = ({ fetchProducts }) => {
     }
 
     return (
+        <div className="form-container">
         <form onSubmit={onSubmit}>
             <div>
-                <label htmlFor="names">Name:</label>
+                <label htmlFor="names">Insert the product name:</label>
                 <input type="text" id="names" value={names} onChange={(e) => setNames(e.target.value)} />
             </div>
-            <button type="submit">Create Product</button>
+            <button type="submit" className="button">Create Product</button>
         </form>
+    </div>
     )
 }
 

@@ -3,11 +3,11 @@ import React from "react"
 const Products = ({ products }) => {
     return (
         <div>
-            <h2>Products</h2>
+            <h2>Products List</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Product name</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

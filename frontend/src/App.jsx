@@ -1,7 +1,7 @@
+import './App.css'
 import { useState, useEffect } from 'react'
 import Products from './Products'
 import ProductForm from './ProductForm'
-import './App.css'
 
 function App() {
     const [products, setProducts] = useState([])
@@ -18,10 +18,11 @@ function App() {
     }
 
     return (
-        <>
-            <Products products={products} />
+        <div className="app-container">
+            <h1 className="title">Products CRUD DEMO</h1>
             <ProductForm fetchProducts={fetchProducts} />
-        </>
+            <Products products={products} />
+        </div>
     )
 }
 
