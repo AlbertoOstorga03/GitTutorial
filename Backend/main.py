@@ -28,6 +28,7 @@ def list_products():
 @app.route('/create_products', methods=['POST'])
 def add_products():
     data = request.get_json()
+    print("Received data")
     try:
         cursor.execute("INSERT INTO products (names) VALUES (%s)", (data["names"],))
         db.commit()

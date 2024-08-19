@@ -3,6 +3,10 @@ import { useState, useEffect } from 'react'
 import Products from './Products'
 import ProductForm from './ProductForm'
 
+const cors = require('cors');
+
+App.use(cors());
+
 function App() {
     const [products, setProducts] = useState([])
 
